@@ -20,10 +20,11 @@ module OmniContacts
         @consumer_secret = consumer_secret
         @callback_path = options[:callback_path] || "#{ MOUNT_PATH }#{class_name}/callback"
         @token_prop_name = "#{base_prop_name}.oauth_token"
+        @referrer_uri = options[:referrer_uri]
       end
 
       def callback
-        host_url_from_rack_env(@env) + callback_path
+        (@referrer_uri || host_url_from_rack_env(@env)) + callback_path
       end
 
       alias :redirect_path :callback_path

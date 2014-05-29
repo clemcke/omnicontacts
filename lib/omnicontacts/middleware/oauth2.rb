@@ -21,15 +21,15 @@ module OmniContacts
         @client_secret = client_secret
         @redirect_path = options[:redirect_path] || "#{ MOUNT_PATH }#{class_name}/callback"
         @ssl_ca_file = options[:ssl_ca_file]
+        @referrer_uri = options[:referrer_uri]
       end
 
       def request_authorization_from_user
-        target_url = append_state_query(authorization_url)
-        [302, {"location" => target_url}, []]
+        [302, {"Content-Type" => "application/x-www-form-urlencoded", "location" => authorization_url}, []]
       end
 
       def redirect_uri
-        host_url_from_rack_env(@env) + redirect_path
+        (@referrer_uri || host_url_from_rack_env(@env)) + redirect_path
       end
 
       # It extract the authorization code from the query string.
